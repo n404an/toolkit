@@ -4,8 +4,6 @@ import "strings"
 
 type level int8
 
-var lvl level
-
 const (
 	debugLevel level = iota
 	infoLevel

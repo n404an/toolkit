@@ -35,9 +35,9 @@ func (m *msg) message(isLn bool, args ...any) {
 }
 
 func start(ctx context.Context, wg *sync.WaitGroup, logLevel string) {
-	setLocalLevel(logLevel)
 	baseCtx = ctx
 	baseWg = wg
+	setLocalLevel(logLevel)
 
 	baseWg.Add(1)
 	if lvl == muteLevel {
@@ -50,4 +50,5 @@ func start(ctx context.Context, wg *sync.WaitGroup, logLevel string) {
 var (
 	baseCtx context.Context
 	baseWg  *sync.WaitGroup
+	lvl     level
 )

@@ -23,19 +23,15 @@ func (m *Map[K, V]) Len() (count int)                  { return m.len() }
 func (m *Map[K, V]) Swap(key K, value V) (previous V, loaded bool) {
 	return m.swap(key, value)
 }
-
 func (m *Map[K, V]) CompareAndDelete(key K, old V) (deleted bool) {
 	return m.compareAndDelete(key, old)
 }
-
 func (m *Map[K, V]) CompareAndSwap(key K, old, new V) bool {
 	return m.compareAndSwap(key, old, new)
 }
-
 func (m *Map[K, V]) LoadAndDelete(key K) (value V, loaded bool) {
 	return m.loadAndDelete(key)
 }
-
 func (m *Map[K, V]) LoadOrStore(key K, value V) (actual any, loaded bool) {
 	return m.loadOrStore(key, value)
 }
@@ -189,7 +185,6 @@ func (m *Map[K, V]) loadAndDelete(key K) (value V, loaded bool) {
 		if !ok && read.amended {
 			e, ok = m.dirty[key]
 			delete(m.dirty, key)
-
 			m.missLocked()
 		}
 		m.mu.Unlock()
@@ -243,7 +238,6 @@ func (m *Map[K, V]) swap(key K, value V) (previous V, loaded bool) {
 	read = m.loadReadOnly()
 	if e, ok := read.m[key]; ok {
 		if e.unexpungeLocked() {
-
 			m.dirty[key] = e
 		}
 		if v := e.swapLocked(&value); v != nil {
@@ -282,7 +276,6 @@ func (m *Map[K, V]) compareAndSwap(key K, old, new V) bool {
 		swapped = e.tryCompareAndSwap(old, new)
 	} else if e, ok := m.dirty[key]; ok {
 		swapped = e.tryCompareAndSwap(old, new)
-
 		m.missLocked()
 	}
 	return swapped
@@ -297,12 +290,11 @@ func (m *Map[K, V]) compareAndDelete(key K, old V) (deleted bool) {
 		e, ok = read.m[key]
 		if !ok && read.amended {
 			e, ok = m.dirty[key]
-
 			m.missLocked()
 		}
 		m.mu.Unlock()
 	}
-	//	sync.Map{}
+
 	for ok {
 		p := e.p.Load()
 		if p == nil || unsafe.Pointer(p) == expunged {

@@ -3,8 +3,7 @@ package pool
 import "sync"
 
 func New[T any](fn func() T) *Pool[T] {
-	return &Pool[T]{
-		p: sync.Pool{New: func() any { return fn() }}}
+	return &Pool[T]{p: sync.Pool{New: func() any { return fn() }}}
 }
 
 func (p *Pool[T]) Get() T  { return p.p.Get().(T) }
